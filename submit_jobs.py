@@ -6,8 +6,7 @@ import sys
 
 
 # create job.sh file for each folder
-job = """
-#!/bin/bash -l
+job = """#!/bin/bash -l
 #SBATCH -J trinity{{ job_name }}
 #SBATCH -o output_%j.txt
 #SBATCH -e errors_%j.txt
@@ -43,6 +42,9 @@ def get_list_of_folders():
 def get_fastq_files(folder):
     # our files are single or pair ended? _1. _2. ?
     filenames = glob.glob(os.path.join(folder, "*fastq"))
+    print(">>>>filenames", filenames)
+    if len(filenames) < 1:
+        return None
     new_filenames = [re.sub(folder + "/", "", i) for i in filenames]
     return new_filenames
 
@@ -62,22 +64,26 @@ def generate_job_text(job, fastq_files, folder):
 
 def write_job_file(folders):
     for folder in folders:
+        print(">folder %s" % folder)
         fastq_files = get_fastq_files(folder)
-        job_text = generate_job_text(job, fastq_files, folder)
-        job_file = os.path.join(folder, "job.sh")
-        with open(job_file, "w") as writer:
-            writer.write(job_text)
+        if fastq_files is not None:
+            job_text = generate_job_text(job, fastq_files, folder)
+            job_file = os.path.join(folder, "job.sh")
+            with open(job_file, "w") as writer:
+                writer.write(job_text)
 
-        # submit job
-        cmd = "sbatch " + job_file
-        print(cmd)
-        p = subprocess.check_call(cmd, shell=True)
-        if p != 0:
-            print(">>> Error, couldnt submit job: %s" % job_file)
-            sys.exit(1)
+            # submit job
+            """
+            cmd = "sbatch " + job_file
+            p = subprocess.check_call(cmd, shell=True)
+            if p != 0:
+                print(">>> Error, couldnt submit job: %s" % job_file)
+                sys.exit(1)
+            """
 
 
 
 folders = get_list_of_folders()
+print(folders)
 write_job_file(folders)
 
