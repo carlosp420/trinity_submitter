@@ -6,8 +6,7 @@ import submit_jobs
 
 class TestSubmitter(unittest.TestCase):
     def setUp(self):
-        self.job = """
-#!/bin/bash -l
+        self.job = """#!/bin/bash -l
 #SBATCH -J trinity{{ job_name }}
 #SBATCH -o output_%j.txt
 #SBATCH -e errors_%j.txt
