@@ -48,7 +48,14 @@ def get_fastq_files(folder):
 def generate_job_text(job, fastq_files, folder):
     my_folder = folder.replace("akito", "")
     mod_job = job.replace("{{ job_name }}", my_folder)
-    return mod_job
+
+    if len(fastq_files) > 1:
+        input_files = "--left " + fastq_files[0] + " --right " + fastq_files[1]
+        mod_job2 = mod_job.replace("{{ input_files }}", input_files)
+    else:
+        input_files = "--single " + fastq_files[0]
+        mod_job2 = mod_job.replace("{{ input_files }}", input_files)
+    return mod_job2
 
 
 def write_job_file(folders):

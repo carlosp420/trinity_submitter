@@ -48,5 +48,20 @@ module load biokit
 
         self.assertEqual(expected, result[2])
 
+        expected = "/homeappl/home/pena/appl_taito/trinityrnaseq_r20140717/Trinity --seqType fq --JM 24G --left SR_1.fastq --right SR_2.fastq --CPU 16 --min_kmer_cov 5 --output trinity_run_out"
+        self.assertEqual(expected, result[-3])
+
+        # Test single paired
+        fastq_files = ["SR.fastq"]
+        folder = "akito_enyo"
+        job_text = submit_jobs.generate_job_text(self.job, fastq_files, folder)
+
+        result = job_text.split("\n")
+        expected = "#SBATCH -J trinity_enyo"
+
+        self.assertEqual(expected, result[2])
+
+        expected = "/homeappl/home/pena/appl_taito/trinityrnaseq_r20140717/Trinity --seqType fq --JM 24G --single SR.fastq --CPU 16 --min_kmer_cov 5 --output trinity_run_out"
+        self.assertEqual(expected, result[-3])
 
 
