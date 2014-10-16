@@ -1,6 +1,8 @@
 import os
 import glob
 import re
+import subprocess
+import sys
 
 
 # create job.sh file for each folder
@@ -62,7 +64,20 @@ def write_job_file(folders):
     for folder in folders:
         fastq_files = get_fastq_files(folder)
         job_text = generate_job_text(job, fastq_files, folder)
-# submit job
+        job_file = os.path.join(folder, "job.sh")
+        with open(job_file, "w") as writer:
+            writer.write(job_text)
 
-# count number of fastq files (single? paired?
+        # submit job
+        cmd = "sbatch " + job_file
+        print(cmd)
+        p = subprocess.check_call(cmd, shell=True)
+        if p != 0:
+            print(">>> Error, couldnt submit job: %s" % job_file)
+            sys.exit(1)
+
+
+
+folders = get_list_of_folders()
+write_job_file(folders)
 

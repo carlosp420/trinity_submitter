@@ -1,3 +1,4 @@
+import os
 import unittest
 
 import submit_jobs
@@ -64,4 +65,11 @@ module load biokit
         expected = "/homeappl/home/pena/appl_taito/trinityrnaseq_r20140717/Trinity --seqType fq --JM 24G --single SR.fastq --CPU 16 --min_kmer_cov 5 --output trinity_run_out"
         self.assertEqual(expected, result[-3])
 
+    def test_write_job_file(self):
+        #fastq_files = ["SR_1.fastq", "SR_2.fastq"]
+        folders = ["akito_zeuzerodes"]
+        #jobfile = submit_jobs.generate_job_text(self.job, fastq_files, folder)
+        submit_jobs.write_job_file(folders)
+
+        self.assertTrue(os.path.isfile(os.path.join(folders[0], "job.sh")))
 
