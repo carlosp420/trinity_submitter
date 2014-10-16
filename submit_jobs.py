@@ -73,13 +73,11 @@ def write_job_file(folders):
                 writer.write(job_text)
 
             # submit job
-            """
             cmd = "sbatch " + job_file
             p = subprocess.check_call(cmd, shell=True)
             if p != 0:
                 print(">>> Error, couldnt submit job: %s" % job_file)
                 sys.exit(1)
-            """
 
 
 
